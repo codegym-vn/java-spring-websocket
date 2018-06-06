@@ -1,8 +1,5 @@
 package com.codegym.model;
 
-/**
- * Created by rajeevkumarsingh on 24/07/17.
- */
 public class ChatMessage {
     private MessageType type;
     private String content;
