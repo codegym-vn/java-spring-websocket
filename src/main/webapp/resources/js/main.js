@@ -1,4 +1,3 @@
-'use strict';
 
 var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');
@@ -18,39 +17,31 @@ var colors = [
 
 function connect(event) {
     username = document.querySelector('#name').value.trim();
-
     if(username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
-
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
-
         stompClient.connect({}, onConnected, onError);
     }
     event.preventDefault();
 }
 
-
 function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/topic/public', onMessageReceived);
-
     // Tell your username to the server
     stompClient.send("/app/chat.addUser",
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
-
     connectingElement.classList.add('hidden');
 }
-
 
 function onError(error) {
     connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color = 'red';
 }
-
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
@@ -68,12 +59,9 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
-
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
-
     var messageElement = document.createElement('li');
-
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined!';
@@ -95,24 +83,19 @@ function onMessageReceived(payload) {
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
     }
-
     var textElement = document.createElement('p');
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
-
     messageElement.appendChild(textElement);
-
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
-
 
 function getAvatarColor(messageSender) {
     var hash = 0;
     for (var i = 0; i < messageSender.length; i++) {
         hash = 31 * hash + messageSender.charCodeAt(i);
     }
-
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }

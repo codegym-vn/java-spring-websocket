@@ -25,9 +25,15 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
+
     @GetMapping("/")
     public String show(){
         return "index";
     }
-
 }
+
+
+
+
+
+
